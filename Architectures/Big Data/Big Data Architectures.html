@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Big Data Architectures.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="big-data-architecture---concepts-and-technologies">Big Data Architecture - Concepts and Technologies</h1>
+<p><img src="/Images/Big Data Architecture.jpeg" alt="Big Data Arch"></p>
+<ul>
+<li>
+<p>Big Data Architecture is the foundation for big data analytics.</p>
+</li>
+<li>
+<p>It serves as a reference blueprint for big data infrastructures and solutions, logically defining how big data solutions will work, the components that will be used, how information will flow and security details.</p>
+</li>
+</ul>
+<h2 id="layers-of-big-data-architecture">Layers of Big Data Architecture</h2>
+<h3 id="data-ingestion">Data Ingestion</h3>
+<ul>
+<li>Responsible for collecting and storing data from various sources into data repository.</li>
+<li>Determining how data will be ingested, transformed and stored.</li>
+</ul>
+<h3 id="data-processing">Data Processing</h3>
+<ul>
+<li>Collecting, cleaning and preparing the data for analysis</li>
+<li>Ensuring that the data is high quality and ready to be used the future.</li>
+</ul>
+<h3 id="data-storage">Data Storage</h3>
+<ul>
+<li>Storing the data in a format that can be easily accessed and analyzed.</li>
+<li>Ensuring the data is accessible and available to the other layers.</li>
+</ul>
+<h3 id="data-visualization">Data Visualization</h3>
+<ul>
+<li>Creating visualizations of data</li>
+</ul>
+<h2 id="types-of-big-data-architecture">Types of Big Data Architecture</h2>
+<h3 id="1-lambda-architecture">1. Lambda Architecture</h3>
+<p><img src="image.png" alt="Lambda Architecture"></p>
+<ul>
+<li><strong>Batch Layer</strong>:
+<ul>
+<li>Responsible for managing the master dataset (all input data).</li>
+<li>Perform batch processing on the data (as schedule).</li>
+<li>Outcome are pre-computed views.</li>
+</ul>
+</li>
+</ul>
+<p><em>(the process frequency should not be too high to minimize the tasks of merging the results to make up the view)</em></p>
+<ul>
+<li>
+<p><strong>Speed Layer</strong>:</p>
+<ul>
+<li>Process any type of data received in realtime</li>
+<li>Calculation of incremental views that will complement (bổ sung) batch views to provide more recent data.</li>
+<li>Deleteing obsolete (lỗi thời) realtime views (post-process) batch.</li>
+</ul>
+</li>
+<li>
+<p><strong>Serving Layer</strong>:</p>
+<ul>
+<li>Responding to queries by returning pre-computed views from the batch layer and real-time views from the speed layer.</li>
+<li>Index and Expose the data to the queries</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-kappa-architecture">2. Kappa Architecture</h3>
+<p><img src="image-1.png" alt="Kappa Architecture"></p>
+<ul>
+<li>
+<p>is a simplified alternative to Lambda Architecture.</p>
+</li>
+<li>
+<p>Design mainly for handling streaming data</p>
+</li>
+<li>
+<p>Batch Layer is removed and Speed Layer now can provide reprocessing capabilities</p>
+</li>
+</ul>
+<h3 id="3-zeta-architecture">3. Zeta Architecture</h3>
+<p><img src="image-2.png" alt="Zeta Architecture"></p>
+<ul>
+<li>
+<p>New approach, define a scable way to increase the speed of data integration into the business -&gt; Make business powerful and data-centric.</p>
+</li>
+<li>
+<p>Provide containers which isolate software enviroments that can be run and use.</p>
+</li>
+</ul>
+<p>Zeta Architecture consists of 7 elements:</p>
+<ul>
+<li>
+<p><strong>Dynamic and Global Resource Management</strong>:</p>
+<ul>
+<li>dynamically allocates resources based on the current needs of the system.
+<ul>
+<li>Computing resources, Storage resources, network resources.</li>
+</ul>
+</li>
+<li>Apply to entire system -&gt; Help with overall performance and efficiency</li>
+</ul>
+</li>
+<li>
+<p><strong>Pluggable Compute Model/Execution Engine</strong>:</p>
+<ul>
+<li>provide different engines and processing models to meet the needs of diverse applications and users within an organization.</li>
+</ul>
+</li>
+<li>
+<p><strong>Realtime Data Storage</strong>:</p>
+<ul>
+<li>supports the need for high-speed enterprise applications through the use of realtime databases.
+Ex: Cassandra</li>
+</ul>
+</li>
+<li>
+<p><strong>Distributed File System</strong>:</p>
+<ul>
+<li>All applications read and write on a common scalable solution</li>
+</ul>
+</li>
+<li>
+<p><strong>Deployment / Container Management System</strong>:</p>
+<ul>
+<li>provide a standardized approach to software deployment.</li>
+</ul>
+</li>
+<li>
+<p><strong>Solution Architecture</strong>:</p>
+</li>
+<li>
+<p>focuse on solving specific business problems and combines one or more applications designed to provide the complete solution.</p>
+</li>
+<li>
+<p><strong>Enterprise Applications</strong>:</p>
+<ul>
+<li>provide simplicity and reusability by providing the components needed to achieve all business objectives defined for an application.</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-microservice-architecture">4. Microservice Architecture</h3>
+<p><img src="image-4.png" alt="Microservice"></p>
+<ul>
+<li>Composed of loose coupling services, which can operate independently.</li>
+<li>They communicate with other via REST Web services.</li>
+<li>Each service focuses on specific task and represents a stand-alone application.</li>
+</ul>
+<h3 id="5-iot-architecture">5. IoT Architecture</h3>
+<p><img src="image-5.png" alt="IoTA"></p>
+<h3 id="comparison">Comparison</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Type of Treatment</th>
+<th>Treatment Methodology</th>
+<th>Data Frequency</th>
+<th>Data Type</th>
+<th>Data Format</th>
+<th>Data Source</th>
+<th>Data Consumers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em><strong>Lambda</strong></em></td>
+<td>Batch/Realtime</td>
+<td>Query and Reporting</td>
+<td>Real-time feed</td>
+<td>Basic Data</td>
+<td>Structured, Semi-Structured &amp; Unstructured</td>
+<td>Generated by Human/Machine, Web, Social Media</td>
+<td>Human</td>
+</tr>
+<tr>
+<td><em><strong>Kappa</strong></em></td>
+<td>Realtime</td>
+<td>Query and Reporting</td>
+<td>Continuous Flows</td>
+<td>Transactional Data</td>
+<td>Structured, Semi-Structured &amp; Unstructured</td>
+<td>Generated by Human/Machine, Web, Social Media</td>
+<td>Human</td>
+</tr>
+<tr>
+<td><em><strong>Zeta</strong></em></td>
+<td>Batch/Realtime</td>
+<td>Query and Reporting</td>
+<td>Ondemand stream</td>
+<td>Transactional Data</td>
+<td>Structured, Semi-Structured &amp; Unstructured</td>
+<td>Web and Social Media, Internal Data Sources</td>
+<td>Business Applications</td>
+</tr>
+<tr>
+<td><em><strong>Microservice</strong></em></td>
+<td>Batch/Realtime</td>
+<td>Query and Reporting/Analytic</td>
+<td>Ondemand stream</td>
+<td>Transactional Data</td>
+<td>Structured, Semi-Structured &amp; Unstructured</td>
+<td>Internal Data Sources, Machine Generated</td>
+<td>Business Process</td>
+</tr>
+<tr>
+<td><em><strong>IoT-a</strong></em></td>
+<td>Batch/Realtime</td>
+<td>Query and Reporting/Analytic/Predictive Analysis</td>
+<td>Ondemand stream</td>
+<td>Basic Data</td>
+<td>Structured, Semi-Structured, Unstructured</td>
+<td>Generated by Machine</td>
+<td>Human/other data repositories</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
