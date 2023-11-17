@@ -4,6 +4,8 @@
 
 * Containers are isolated from each other and handle their own software, but they can communicate with each other through well-defined channels
 
+* Docker containers are **stateless**: any changes done inside a container will not be saved when the container is killed and started again. -> easy to restore initial state.
+
 * Docker needs _**Docker Image**_ to act as an artifact to build up containers.
 
 * Container has layers of images

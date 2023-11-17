@@ -27,7 +27,7 @@
 
 ### 1. Lambda Architecture
 ![Lambda Architecture](/Images/Lambda-Architecture.png)
-
+_(batch only serving layer)_
 * **Batch Layer**:
     * Responsible for managing the master dataset (all input data).
     * Perform batch processing on the data (as schedule).
@@ -51,6 +51,16 @@ _(the process frequency should not be too high to minimize the tasks of merging 
 * Design mainly for handling streaming data
 
 * Batch Layer is removed and Speed Layer now can provide reprocessing capabilities
+
+||Lambda|Kappa|
+|-----|-----|-----|
+|Adoption|Easy, reuse existing ETL|More complex, New system need new tech stack|
+|Implementation|Simpler|Complex|
+|Maintenance|Need to maintain 2 systems (Batch/Stream)|Easier|
+|Performance|Depends on the complexity of batch and speed layers|Generally faster due to simplified architecture|
+|Resource|Requires more resources for two systems|More resource-efficient|
+|Code Duplication|Possible, since batch and speed layers may have similar processing logic|No, as there is only one proccessing layer|
+|Use Case|Best for storing historical data|Best for real-time processing|
 
 ### 3. Zeta Architecture
 ![Zeta Architecture](/Images/Zeta-Architecture.png)
